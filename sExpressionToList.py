@@ -1,9 +1,19 @@
 import sys
 
 
+def getIdentifierStartingAtIndex(sExpressionString: str, startIndex):
+    result = ""
+    i = startIndex
+    while not sExpressionString[i].isspace() and sExpressionString[i] not in {"(", ")", "."}:
+        result += sExpressionString[i]
+        i += 1
+
+    return [result, i]
+
+
 def getFirstListItem(sExpressionString):
     if sExpressionString[0] != "(":
-        return sExpressionString[0]
+        return getIdentifierStartingAtIndex(sExpressionString, 0)
 
     countUnclosedParens = 1
     i = 1
@@ -16,7 +26,7 @@ def getFirstListItem(sExpressionString):
 
         i += 1
 
-    return sExpressionString[0: i]
+    return [sExpressionString[0: i], i]
 
 
 def buildListItems(fullSExpressionString):
@@ -24,8 +34,9 @@ def buildListItems(fullSExpressionString):
 
     sExpressionString: str = fullSExpressionString[1:]
     while len(sExpressionString):
-        listItem = getFirstListItem(sExpressionString)
-        listItems.append(listItem)
+        [listItem, i] = getFirstListItem(sExpressionString)
+        if (listItem):
+            listItems.append(listItem)
 
         listItemLength = len(listItem)
         sExpressionString = sExpressionString[listItemLength + 2:]

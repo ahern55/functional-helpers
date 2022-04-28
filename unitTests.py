@@ -39,6 +39,20 @@ class TestListToSExpression(unittest.TestCase):
         self.assertEqual(listToSExpression(listString),
                          "(A . ((B . C) . ()))".replace(" ", ""))
 
+    def testMultipleCharacterAtoms(self):
+        listString = "(s1 s2 s3 jason)"
+        self.assertEqual(listToSExpression(listString),
+                         "(s1.(s2.(s3.(jason.()))))")
+
+    def testWackyWhitespace(self):
+        listString = "    (A    BC   C   )   "
+        self.assertEqual(listToSExpression(listString), "(A.(BC.(C.())))")
+
+    def testWackyWhitespace2(self):
+        listString = "    (A    (   BC D   )   C   )   "
+        self.assertEqual(listToSExpression(listString),
+                         "(A.((BC.(D.())).(C.())))")
+
 
 class TestSExpressionToList(unittest.TestCase):
     def testOne(self):
@@ -75,6 +89,11 @@ class TestSExpressionToList(unittest.TestCase):
         sExpressionString = "(A.((B.C).()))"
         self.assertEqual(sExpressionToList(sExpressionString).replace(
             " ", ""), "(A (B.C))".replace(" ", ""))
+
+    def testMultipleCharacterAtoms(self):
+        sExpressionString = "(s1.(s2.(s3.(jason.()))))"
+        self.assertEqual(sExpressionToList(sExpressionString),
+                         "(s1 s2 s3 jason)")
 
 
 if __name__ == '__main__':

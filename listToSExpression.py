@@ -1,9 +1,28 @@
 import sys
 
 
+def getIdentifierStartingAtIndex(listString: str, startIndex):
+    result = ""
+    i = startIndex
+    while not listString[i].isspace() and listString[i] not in {"(", ")"}:
+        result += listString[i]
+        i += 1
+
+    return [result, i]
+
+
+def getIndexAfterConsumingWhitespace(listString: str, startIndex):
+    i = startIndex
+    while listString[i].isspace():
+        i += 1
+
+    return i
+
+
 def getNextListItem(listString, startIndex):
+    startIndex = getIndexAfterConsumingWhitespace(listString, startIndex)
     if listString[startIndex] != "(":
-        return listString[startIndex]
+        return getIdentifierStartingAtIndex(listString, startIndex)
 
     countUnclosedParens = 1
     i = startIndex + 1
@@ -16,7 +35,7 @@ def getNextListItem(listString, startIndex):
 
         i += 1
 
-    return listString[startIndex: i]
+    return [listString[startIndex: i], i]
 
 
 def buildListItems(listString):
@@ -24,16 +43,17 @@ def buildListItems(listString):
     listItems = []
 
     while index < len(listString) - 1:
-        listItem = getNextListItem(listString, index)
-        listItems.append(listItem)
+        [listItem, i] = getNextListItem(listString, index)
+        if listItem:
+            listItems.append(listItem)
 
-        index += len(listItem)
+        index = i
 
     return listItems
 
 
 def isSExpression(listItem):
-    return listItem[0] == "(" and "." not in listItem
+    return listItem and listItem[0] == "(" and "." not in listItem
 
 
 def buildSExpression(listItems):
@@ -58,10 +78,10 @@ def buildSExpression(listItems):
     return sExpression
 
 
-def listToSExpression(listString):
-    listString = listString.replace(" ", "")
+def listToSExpression(listString: str):
+    listString = listString.strip()
 
-    return buildSExpression(buildListItems(listString))
+    return buildSExpression(buildListItems(listString)).replace(" ", "")
 
 
 if __name__ == "__main__":
