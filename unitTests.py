@@ -95,6 +95,18 @@ class TestSExpressionToList(unittest.TestCase):
         self.assertEqual(sExpressionToList(sExpressionString),
                          "(s1 s2 s3 jason)")
 
+    def testWackyWhitespace(self):
+        sExpressionString = " (   A  .  (  B C . ( C . ( ) ) )   )    "
+        expectedListString = "(A BC C)"
+        self.assertEqual(sExpressionToList(
+            sExpressionString), expectedListString)
+
+    def testWackyWhitespace2(self):
+        sExpressionString = "           ( A . ((     BC.   (D .   ( ) ) ).  (  C. ( )       ) ) )  "
+        listStringExpected = "(A (BC D) C)"
+        self.assertEqual(sExpressionToList(
+            sExpressionString), listStringExpected)
+
 
 if __name__ == '__main__':
     unittest.main()
