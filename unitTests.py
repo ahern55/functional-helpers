@@ -53,6 +53,16 @@ class TestListToSExpression(unittest.TestCase):
         self.assertEqual(listToSExpression(listString),
                          "(A.((BC.(D.())).(C.())))")
 
+    def testQuote(self):
+        listString = "(cdr '(A B))"
+        self.assertEqual(listToSExpression(listString),
+                         "(cdr.((A.(B.())).()))")
+
+    def testQuote2(self):
+        listString = "(equal? (cons 'a '(b)) '(a b))"
+        self.assertEqual(listToSExpression(listString),
+                         "(equal?.((cons.(a.((b.()).()))).((a.(b.())).())))")
+
 
 class TestSExpressionToList(unittest.TestCase):
     def testOne(self):

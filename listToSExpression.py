@@ -80,6 +80,7 @@ def buildSExpression(listItems):
 
 def listToSExpression(listString: str):
     listString = listString.strip()
+    listString = listString.replace("'", "")
 
     return buildSExpression(buildListItems(listString)).replace(" ", "")
 
